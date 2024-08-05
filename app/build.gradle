@@ -1,0 +1,170 @@
+//plugins {
+//    alias(libs.plugins.androidApplication)
+//    alias(libs.plugins.jetbrainsKotlinAndroid)
+//}
+
+plugins {
+    id 'com.android.application'
+//    id 'kotlin-android'
+//    id 'kotlin-android-extensions'
+    // RFix插件
+//    apply plugin:
+    id 'com.tencent.rfix'
+}
+
+android {
+//    namespace 'com.bete.buglytesstdemo'
+//    compileSdk 34
+    compileSdkVersion 28
+    signingConfigs {
+//        lcd5 {
+//            keyAlias 'betetech'
+//            keyPassword 'betetech'
+//            storeFile file('C:/Users/lenovo/android_bete.jks')
+//            storePassword 'betetech'
+//        }
+//        lcd7 {
+//            keyAlias 'betetech'
+//            keyPassword 'betetech'
+//            storeFile file('C:/Users/lenovo/android_bete7.jks')
+//            storePassword 'betetech'
+//        }
+
+        release  {
+            keyAlias 'betetech'
+            keyPassword 'betetech'
+            storeFile file('C:/Users/lenovo/android_bete7.jks')
+            storePassword 'betetech'
+            v2SigningEnabled true
+        }
+
+        debug   {
+            keyAlias 'betetech'
+            keyPassword 'betetech'
+            storeFile file('C:/Users/lenovo/android_bete7.jks')
+            storePassword 'betetech'
+            v2SigningEnabled true
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.bete.buglytesstdemo"
+//        minSdk 24
+//        targetSdk 34
+//        versionCode 1
+
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    // 问题 这边需要打开吗？？？？
+
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), project.file('proguard-rules.pro')
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+//    kotlinOptions {
+//        jvmTarget = '1.8'
+//    }
+    buildFeatures {
+        compose true
+    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion '1.5.1'
+//    }
+//    packaging {
+//        resources {
+//            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+//        }
+//    }
+
+
+// RFix插件的配置
+    RFixPatch {
+        // 补丁类型：Disable/Tinker
+        patchType = 'Tinker'
+        // 原始Apk
+        oldApks = ["${projectDir.absolutePath}/RFix/old.apk"]
+        // 修复Apk
+        newApks = ["${projectDir.absolutePath}/RFix/new.apk"]
+        // 补丁输出目录
+        outputFolder = "${projectDir.absolutePath}/RFix/"
+        buildConfig {
+            // 补丁唯一ID，用于识别补丁和版本是否匹配
+            patchId = new Date().format("MMddHHmmss")
+            // 原始Apk的混淆文件
+            applyMapping = "${projectDir.absolutePath}/RFix/mapping.txt"
+            applyResourceMapping = "${projectDir.absolutePath}/RFix/R.txt"
+            // 使用splits实现多架构编译时需要开启该功能，以确保每个Apk的PatchId不同
+            appendOutputNameToPatchId = true
+            // 开启多架构补丁包独立打包功能
+            enablePackageSeparate = false
+            // 应用是否开启了加固
+            isProtectedApp = false
+        }
+    }
+}
+
+dependencies {
+
+//    implementation libs.androidx.core.ktx
+//    implementation libs.androidx.lifecycle.runtime.ktx
+//    implementation libs.androidx.activity.compose
+////    implementation platform(libs.androidx.compose.bom)
+//    implementation libs.androidx.ui
+//    implementation libs.androidx.ui.graphics
+////    implementation libs.androidx.ui.tooling.preview
+//    implementation libs.androidx.material3
+////    testImplementation libs.junit
+////    androidTestImplementation libs.androidx.junit
+//    androidTestImplementation libs.androidx.espresso.core
+////    androidTestImplementation platform(libs.androidx.compose.bom)
+////    androidTestImplementation libs.androidx.ui.test.junit4
+////    debugImplementation libs.androidx.ui.tooling
+////    debugImplementation libs.androidx.ui.test.manifest
+//
+//    // todo 这个只是测试版本所以不需要放到 lib.version.tol 中
+////    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+//    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "com.tencent.rfix:RFix-android-lib:2.0.0-beta2"
+//    implementation libs.androidx.activity
+    compileOnly "com.tencent.rfix:RFix-android-anno:2.0.0-beta2"
+    annotationProcessor "com.tencent.rfix:RFix-android-anno:2.0.0-beta2"
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.xutils:xutils:3.5.1'
+
+}
